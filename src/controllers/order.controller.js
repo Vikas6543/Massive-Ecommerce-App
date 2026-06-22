@@ -12,6 +12,7 @@ import {
   notifyPaymentSuccess,
   notifyOrderStatusChanged,
 } from "../services/notification.service.js";
+import { config } from "../config/env.js";
 
 // ✅ CREATE ORDER + RAZORPAY PAYMENT
 export const placeOrder = asyncHandler(async (req, res) => {
@@ -165,7 +166,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
       {
         order,
         razorpayOrder,
-        key: process.env.RAZORPAY_KEY_ID,
+        key: config.RAZORPAY_KEY_ID,
       },
       "Order placed successfully",
     ),
@@ -184,7 +185,7 @@ export const verifyPayment = asyncHandler(async (req, res) => {
   // verify signature
   const body = razorpay_order_id + "|" + razorpay_payment_id;
   const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .createHmac("sha256", config.RAZORPAY_KEY_SECRET)
     .update(body)
     .toString("hex");
 
