@@ -1,0 +1,1 @@
+okay before moving to deployment iwant to ask few questions ,as i said im building production ready app and as we know production level app has some advance concepts like redis and some of the other stuff,,,but you havnt implemented why??
