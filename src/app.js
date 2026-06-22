@@ -17,6 +17,7 @@ import sellerRoutes from "./routes/seller.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import searchRoutes from "./routes/search.routes.js";
+import { config } from "./config/env.js";
 
 const app = express();
 
@@ -24,7 +25,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: config.CLIENT_URL || "http://localhost:3000",
     credentials: true,
   }),
 );
@@ -44,7 +45,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
 // ✅ Logger (only in development)
-if (process.env.NODE_ENV === "development") {
+if (config.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
