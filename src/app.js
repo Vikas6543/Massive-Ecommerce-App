@@ -29,7 +29,7 @@ app.use(
   }),
 );
 
-// ✅ Rate Limiting
+//✅ Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // Time window = 15 minutes
   max: 100, // Maximum 100 requests per IP
