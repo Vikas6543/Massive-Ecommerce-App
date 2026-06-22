@@ -1,17 +1,18 @@
 import jwt from "jsonwebtoken";
 import redis from "../config/redis.js";
+import { config } from "../config/env.js";
 
 // ✅ Generate Access Token (short lived)
 export const generateAccessToken = (userId, role) => {
-  return jwt.sign({ id: userId, role }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "15m",
+  return jwt.sign({ id: userId, role }, config.ACCESS_TOKEN_SECRET, {
+    expiresIn: config.ACCESS_TOKEN_EXPIRY || "15m",
   });
 };
 
 // ✅ Generate Refresh Token (long lived)
 export const generateRefreshToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "7d",
+  return jwt.sign({ id: userId }, config.REFRESH_TOKEN_SECRET, {
+    expiresIn: config.REFRESH_TOKEN_EXPIRY || "7d",
   });
 };
 
@@ -24,12 +25,12 @@ export const generateTokens = (userId, role) => {
 
 // ✅ Verify Access Token
 export const verifyAccessToken = (token) => {
-  return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  return jwt.verify(token, config.ACCESS_TOKEN_SECRET);
 };
 
 // ✅ Verify Refresh Token
 export const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  return jwt.verify(token, config.REFRESH_TOKEN_SECRET);
 };
 
 // ✅ Blacklist a token in Redis (on logout or rotation)
@@ -47,14 +48,14 @@ export const isTokenBlacklisted = async (token) => {
 export const setTokenCookies = (res, accessToken, refreshToken) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true, // JS cannot access it
-    secure: process.env.NODE_ENV === "production",
+    secure: config.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: config.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });

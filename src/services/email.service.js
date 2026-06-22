@@ -1,9 +1,10 @@
 import transporter from "../config/email.js";
+import { config } from "../config/env.js";
 
 // ✅ Base send email function
 const sendEmail = async ({ to, subject, html }) => {
   const mailOptions = {
-    from: `"Massive Shop" <${process.env.SMTP_USER}>`,
+    from: `"Massive Shop" <${config.SMTP_USER}>`,
     to,
     subject,
     html,
@@ -13,7 +14,7 @@ const sendEmail = async ({ to, subject, html }) => {
 
 // ✅ Send Email Verification Link
 export const sendVerificationEmail = async (email, name, token) => {
-  const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
+  const verifyUrl = `${config.CLIENT_URL}/verify-email?token=${token}`;
 
   await sendEmail({
     to: email,
@@ -60,7 +61,7 @@ export const sendOTPEmail = async (email, name, otp, purpose) => {
 
 // ✅ Send Password Reset Email
 export const sendPasswordResetEmail = async (email, name, token) => {
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+  const resetUrl = `${config.CLIENT_URL}/reset-password?token=${token}`;
 
   await sendEmail({
     to: email,
@@ -90,7 +91,7 @@ export const sendWelcomeEmail = async (email, name) => {
         <h2 style="color: #333;">Welcome ${name}! 🎉</h2>
         <p>Your account has been verified successfully.</p>
         <p>Start shopping now and enjoy exclusive deals!</p>
-        <a href="${process.env.CLIENT_URL}"
+        <a href="${config.CLIENT_URL}"
           style="background: #4F46E5; color: white; padding: 12px 24px;
           text-decoration: none; border-radius: 6px; display: inline-block;">
           Start Shopping
@@ -125,7 +126,7 @@ export const sendNewDeviceEmail = async (
         <p>If this was you, no action needed.</p>
         <p style="color: #DC2626;">
           If this wasn't you, please 
-          <a href="${process.env.CLIENT_URL}/reset-password">reset your password</a> 
+          <a href="${config.CLIENT_URL}/reset-password">reset your password</a> 
           immediately!
         </p>
       </div>
@@ -148,7 +149,7 @@ export const sendAccountLockedEmail = async (email, name) => {
           <p>🕐 Your account will be unlocked after <b>30 minutes</b>.</p>
         </div>
         <p>If this wasn't you, please reset your password immediately:</p>
-        <a href="${process.env.CLIENT_URL}/forgot-password"
+        <a href="${config.CLIENT_URL}/forgot-password"
           style="background: #DC2626; color: white; padding: 12px 24px;
           text-decoration: none; border-radius: 6px; display: inline-block;">
           Reset Password
