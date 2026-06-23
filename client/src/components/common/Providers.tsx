@@ -1,9 +1,7 @@
-// src/components/common/Providers.tsx
-
 "use client";
 
 import { Provider } from "react-redux";
-import { store } from "@/store";
+import store from "@/store";
 import { Toaster } from "@/components/ui/sonner";
 
 interface ProvidersProps {
