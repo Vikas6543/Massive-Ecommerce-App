@@ -1,7 +1,6 @@
-// src/store/index.ts
-
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { api } from "@/services/api";
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
 import notificationReducer from "./slices/notificationSlice";
@@ -11,7 +10,10 @@ const store = configureStore({
     auth: authReducer,
     cart: cartReducer,
     notification: notificationReducer,
+    [api.reducerPath]: api.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(api.middleware),
   devTools: process.env.NODE_ENV !== "production",
 });
 
@@ -23,4 +25,5 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+export { store };
 export default store;

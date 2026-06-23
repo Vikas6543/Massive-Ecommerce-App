@@ -7,7 +7,6 @@ interface User {
   email: string;
   role: "user" | "seller" | "admin";
   avatar?: string;
-  isEmailVerified: boolean;
 }
 
 interface AuthState {
