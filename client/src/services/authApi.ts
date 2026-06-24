@@ -6,7 +6,6 @@ import {
   MessageResponse,
   RegisterRequest,
   ResetPasswordRequest,
-  VerifyOtpRequest,
   ForgotPasswordRequest,
 } from "@/types/auth.types";
 

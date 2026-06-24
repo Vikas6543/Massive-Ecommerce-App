@@ -1,15 +1,12 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle } from "lucide-react";
-import { toast } from "sonner";
-import { ROUTES } from "@/config/constants";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function VerifyEmailPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
 
@@ -17,7 +14,7 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     if (token) verifyEmailToken(token);
-  }, [token]);
+  }, [token, verifyEmailToken]);
 
   return (
     <motion.div

@@ -11,6 +11,8 @@ import {
   // useVerifyEmailMutation,
   // useResendOtpMutation,
   useVerifyEmailTokenMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } from "@/services/authApi";
 import {
   LoginRequest,
@@ -33,10 +35,12 @@ export function useAuth() {
   //   useVerifyEmailMutation();
   // const [resendOtpMutation, { isLoading: isResendLoading }] =
   //   useResendOtpMutation();
-  const [
-    verifyEmailTokenMutation,
-    { isLoading: isVerifyEmailTokenLoading, isSuccess: isVerifySuccess },
-  ] = useVerifyEmailTokenMutation();
+  const [verifyEmailTokenMutation, { isLoading: isVerifyEmailTokenLoading }] =
+    useVerifyEmailTokenMutation();
+  const [forgotPasswordMutation, { isLoading: isForgotPasswordLoading }] =
+    useForgotPasswordMutation();
+  const [resetPasswordMutation, { isLoading: isResetPasswordLoading }] =
+    useResetPasswordMutation();
 
   // FETCH CURRENT USER ON APP LOAD
   const { data: meData, isLoading: isMeLoading } = useGetMeQuery(undefined, {
@@ -121,6 +125,27 @@ export function useAuth() {
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    try {
+      const result = await forgotPasswordMutation({ email }).unwrap();
+      toast.success(result.message || "Reset link sent! Check your email.");
+      return true;
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong!");
+      return false;
+    }
+  };
+
+  const resetPassword = async (token: string, password: string) => {
+    try {
+      const result = await resetPasswordMutation({ token, password }).unwrap();
+      toast.success(result.message || "Password reset successfully!");
+      router.push(ROUTES.LOGIN);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to reset password!");
+    }
+  };
+
   // LOGOUT
   const logoutUser = async () => {
     try {
@@ -146,6 +171,8 @@ export function useAuth() {
     register,
     logoutUser,
     verifyEmailToken,
+    forgotPassword,
+    resetPassword,
     // verifyEmail,
     // resendOtp,
 
@@ -154,6 +181,8 @@ export function useAuth() {
     isRegisterLoading,
     isLogoutLoading,
     isVerifyEmailTokenLoading,
+    isForgotPasswordLoading,
+    isResetPasswordLoading,
     // isResendLoading,
   };
 }

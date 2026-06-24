@@ -1,8 +1,4 @@
-// src/app/(auth)/layout.tsx
-
 "use client";
-
-import type { Metadata } from "next";
 
 export default function AuthLayout({
   children,
@@ -37,22 +33,7 @@ export default function AuthLayout({
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex -space-x-2">
-            {["A", "B", "C", "D"].map((letter, i) => (
-              <div
-                key={i}
-                className="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-950 flex items-center justify-center text-xs font-medium text-zinc-300"
-              >
-                {letter}
-              </div>
-            ))}
-          </div>
-          <p className="text-zinc-400 text-sm">
-            <span className="text-white font-medium">10,000+</span> happy
-            customers
-          </p>
-        </div>
+        <div></div>
       </div>
 
       {/* RIGHT PANEL — always white background forced */}
