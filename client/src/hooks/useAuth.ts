@@ -8,8 +8,15 @@ import {
   useLogoutMutation,
   useRegisterMutation,
   useGetMeQuery,
+  // useVerifyEmailMutation,
+  // useResendOtpMutation,
+  useVerifyEmailTokenMutation,
 } from "@/services/authApi";
-import { LoginRequest, RegisterRequest } from "@/types/auth.types";
+import {
+  LoginRequest,
+  RegisterRequest,
+  // VerifyOtpRequest,
+} from "@/types/auth.types";
 import { ROUTES } from "@/config/constants";
 
 export function useAuth() {
@@ -22,6 +29,14 @@ export function useAuth() {
   const [registerMutation, { isLoading: isRegisterLoading }] =
     useRegisterMutation();
   const [logoutMutation, { isLoading: isLogoutLoading }] = useLogoutMutation();
+  // const [verifyEmailMutation, { isLoading: isVerifyLoading }] =
+  //   useVerifyEmailMutation();
+  // const [resendOtpMutation, { isLoading: isResendLoading }] =
+  //   useResendOtpMutation();
+  const [
+    verifyEmailTokenMutation,
+    { isLoading: isVerifyEmailTokenLoading, isSuccess: isVerifySuccess },
+  ] = useVerifyEmailTokenMutation();
 
   // FETCH CURRENT USER ON APP LOAD
   const { data: meData, isLoading: isMeLoading } = useGetMeQuery(undefined, {
@@ -42,11 +57,10 @@ export function useAuth() {
   const register = async (data: RegisterRequest) => {
     try {
       const result = await registerMutation(data).unwrap();
-      toast.success(result.message || "Registration successful!");
-      // Redirect to verify email with email in query param
-      router.push(
-        `${ROUTES.VERIFY_EMAIL}?email=${encodeURIComponent(data.email)}`,
+      toast.success(
+        result.message || "Registration successful! Please verify your email.",
       );
+      router.push(ROUTES.LOGIN);
     } catch (error: any) {
       toast.error(error?.data?.message || "Registration failed!");
     }
@@ -70,6 +84,40 @@ export function useAuth() {
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "Login failed!");
+    }
+  };
+
+  // VERIFY OTP
+  // const verifyEmail = async (data: VerifyOtpRequest) => {
+  //   try {
+  //     const result = await verifyEmailMutation(data).unwrap();
+  //     toast.success(result.message || "Email verified successfully!");
+  //     router.push(ROUTES.LOGIN);
+  //   } catch (error: any) {
+  //     toast.error(error?.data?.message || "Invalid OTP!");
+  //   }
+  // };
+
+  // RESEND OTP
+  // const resendOtp = async (email: string) => {
+  //   try {
+  //     const result = await resendOtpMutation({ email }).unwrap();
+  //     toast.success(result.message || "OTP sent successfully!");
+  //     return true; // so component can reset timer
+  //   } catch (error: any) {
+  //     toast.error(error?.data?.message || "Failed to resend OTP!");
+  //     return false;
+  //   }
+  // };
+
+  const verifyEmailToken = async (token: string) => {
+    try {
+      const result = await verifyEmailTokenMutation(token).unwrap();
+      toast.success(result.message || "Email verified successfully!");
+      setTimeout(() => router.push(ROUTES.LOGIN), 2000);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Invalid or expired link.");
+      setTimeout(() => router.push(ROUTES.REGISTER), 2000);
     }
   };
 
@@ -97,10 +145,15 @@ export function useAuth() {
     login,
     register,
     logoutUser,
+    verifyEmailToken,
+    // verifyEmail,
+    // resendOtp,
 
     // LOADING STATES
     isLoginLoading,
     isRegisterLoading,
     isLogoutLoading,
+    isVerifyEmailTokenLoading,
+    // isResendLoading,
   };
 }

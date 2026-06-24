@@ -21,23 +21,6 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
-    // VERIFY OTP
-    verifyEmail: builder.mutation<AuthResponse, VerifyOtpRequest>({
-      query: (data) => ({
-        url: "/auth/verify-email",
-        method: "POST",
-        body: data,
-      }),
-      async onQueryStarted(_, { queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          if (data?.data?.accessToken) {
-            localStorage.setItem(TOKEN_KEYS.ACCESS, data.data.accessToken);
-          }
-        } catch {}
-      },
-    }),
-
     // LOGIN
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (data) => ({
@@ -95,24 +78,42 @@ export const authApi = api.injectEndpoints({
       }),
     }),
 
-    // RESEND OTP
-    resendOtp: builder.mutation<MessageResponse, { email: string }>({
-      query: (data) => ({
-        url: "/auth/resend-otp",
-        method: "POST",
-        body: data,
+    // VERIFY EMAIL TOKEN
+    verifyEmailToken: builder.mutation<MessageResponse, string>({
+      query: (token) => ({
+        url: `/auth/verify-email?token=${token}`,
+        method: "GET",
       }),
     }),
+
+    // VERIFY OTP
+    // verifyEmail: builder.mutation<AuthResponse, VerifyOtpRequest>({
+    //   query: (data) => ({
+    //     url: "/auth/verify-otp",
+    //     method: "POST",
+    //     body: data,
+    //   }),
+    // }),
+
+    // RESEND OTP
+    // resendOtp: builder.mutation<MessageResponse, { email: string }>({
+    //   query: (data) => ({
+    //     url: "/auth/resend-otp",
+    //     method: "POST",
+    //     body: data,
+    //   }),
+    // }),
   }),
 });
 
 export const {
   useRegisterMutation,
-  useVerifyEmailMutation,
+  // useVerifyEmailMutation,
   useLoginMutation,
   useLogoutMutation,
   useGetMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useResendOtpMutation,
+  // useResendOtpMutation,
+  useVerifyEmailTokenMutation,
 } = authApi;

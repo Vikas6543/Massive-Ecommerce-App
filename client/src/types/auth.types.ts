@@ -23,6 +23,7 @@ export interface LoginRequest {
 export interface VerifyOtpRequest {
   email: string;
   otp: string;
+  purpose: string;
 }
 
 export interface ForgotPasswordRequest {
