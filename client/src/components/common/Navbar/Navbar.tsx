@@ -51,28 +51,36 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
-          <Link href={ROUTES.HOME} className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">S</span>
-            </div>
-            <span className="font-bold text-zinc-900 text-lg">ShopZone</span>
-          </Link>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link href={ROUTES.HOME} className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">S</span>
+              </div>
+              <span className="font-bold text-zinc-900 text-lg">ShopZone</span>
+            </Link>
+          </motion.div>
 
           {/* NAV LINKS — desktop */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
+              <motion.div
                 key={link.href}
-                href={link.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors
                   ${
                     pathname === link.href
                       ? "text-indigo-600 bg-indigo-50"
                       : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
                   }`}
-              >
-                {link.label}
-              </Link>
+                >
+                  {link.label}
+                </Link>
+              </motion.div>
             ))}
           </nav>
 
@@ -269,20 +277,27 @@ export default function Navbar() {
             className="md:hidden border-t border-zinc-100 bg-white overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <Link
+              {navLinks.map((link, index) => (
+                <motion.div
                   key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors
                     ${
                       pathname === link.href
                         ? "text-indigo-600 bg-indigo-50"
                         : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
                     }`}
-                >
-                  {link.label}
-                </Link>
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
 
               {!isLoggedIn && (
