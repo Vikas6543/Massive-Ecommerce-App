@@ -30,4 +30,12 @@ const TOKEN_KEYS = {
   REFRESH: "refreshToken",
 } as const;
 
-export { API_BASE_URL, SOCKET_URL, APP_NAME, ROUTES, TOKEN_KEYS };
+// BRAND COLORS
+const BRAND = {
+  primary: "#4F46E5", // indigo-600
+  primaryHover: "#4338CA", // indigo-700
+  primaryLight: "#EEF2FF", // indigo-50
+  primaryText: "#4F46E5", // indigo-600
+} as const;
+
+export { API_BASE_URL, SOCKET_URL, APP_NAME, ROUTES, TOKEN_KEYS, BRAND };
