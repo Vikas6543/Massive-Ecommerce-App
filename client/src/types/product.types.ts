@@ -43,7 +43,8 @@ export interface Product {
   slug: string;
   description: string;
   price: number;
-  discountPrice?: number;
+  discountPrice: number;
+  discountPercentage: number;
   images: ProductImage[];
   category: Category;
   brand: Brand;

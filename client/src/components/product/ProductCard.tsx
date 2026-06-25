@@ -41,16 +41,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     });
   };
 
-  const discount = product.salePrice
-    ? calculateDiscount(product.price, product.salePrice)
-    : 0;
-
   return (
     <Link href={`/products/${product.slug}`}>
       <motion.div
         whileHover={{ y: -4 }}
         transition={{ duration: 0.2 }}
-        className="group bg-white rounded-2xl border border-zinc-100 overflow-hidden hover:shadow-md hover:border-zinc-200 transition-all"
+        className="group bg-white rounded-2xl border border-zinc-100 overflow-hidden hover:shadow-md hover:border-zinc-200 transition-all relative"
       >
         {/* IMAGE */}
         <div className="relative aspect-square bg-zinc-50 overflow-hidden">
@@ -60,12 +56,16 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
-          {/* DISCOUNT BADGE */}
-          {discount > 0 && (
-            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
-              -{discount}%
-            </div>
-          )}
+          {/* RATING */}
+          <div className="flex items-center gap-1 absolute top-46 left-2 bg-zinc-100 px-1.5 py-1 rounded-lg border border-amber-50 shadow-sm">
+            <Star size={12} className="fill-amber-400 text-amber-400" />
+            <span className="text-xs font-medium text-zinc-700">
+              {product.ratings.average}
+            </span>
+            {/* <span className="text-xs text-zinc-400">
+              ({product.ratings.count})
+            </span> */}
+          </div>
 
           {/* OUT OF STOCK */}
           {product.stock === 0 && (
@@ -108,26 +108,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
 
-        {/* DETAILS */}
+        {/* PRODUCT DETAILS */}
         <div className="p-4 space-y-2">
-          <p className="text-xs text-zinc-400 font-medium">
-            {product.category?.name}
-          </p>
-
+          {/* PRODUCT NAME */}
           <h3 className="text-sm font-semibold text-zinc-900 line-clamp-2 leading-snug">
             {product.name}
           </h3>
-
-          {/* RATING */}
-          <div className="flex items-center gap-1">
-            <Star size={12} className="fill-amber-400 text-amber-400" />
-            <span className="text-xs font-medium text-zinc-700">
-              {product.ratings.average.toFixed(1)}
-            </span>
-            <span className="text-xs text-zinc-400">
-              ({product.ratings.count})
-            </span>
-          </div>
 
           {/* PRICE */}
           <div className="flex items-center gap-2">
@@ -137,6 +123,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-xs text-zinc-400 line-through">
               {formatCurrency(product.price)}
             </span>
+            <span className="text-xs">({product.discountPercentage}% off)</span>
           </div>
         </div>
       </motion.div>
