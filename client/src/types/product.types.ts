@@ -2,7 +2,7 @@ export interface Category {
   _id: string;
   name: string;
   slug: string;
-  image: string;
+  image?: string;
   description?: string;
 }
 
@@ -10,7 +10,24 @@ export interface Brand {
   _id: string;
   name: string;
   slug: string;
-  logo: string;
+  logo?: string;
+}
+
+export interface ProductImage {
+  url: string;
+  public_id: string;
+  _id: string;
+}
+
+export interface ProductSpecification {
+  key: string;
+  value: string;
+  _id: string;
+}
+
+export interface ProductRatings {
+  average: number;
+  count: number;
 }
 
 export interface ProductVariant {
@@ -26,24 +43,37 @@ export interface Product {
   slug: string;
   description: string;
   price: number;
-  salePrice?: number;
-  images: string[];
+  discountPrice?: number;
+  images: ProductImage[];
   category: Category;
   brand: Brand;
   variants?: ProductVariant[];
-  ratings: number;
-  reviewCount: number;
+  ratings: ProductRatings;
+  specifications?: ProductSpecification[];
   stock: number;
+  totalStock: number;
   isFeatured: boolean;
   tags: string[];
+  sold: number;
+  status: string;
   createdAt: string;
+  updatedAt: string;
 }
 
-export interface PaginatedProducts {
-  products: Product[];
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
   totalPages: number;
-  currentPage: number;
-  totalProducts: number;
+}
+
+export interface ProductsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    products: Product[];
+    pagination: Pagination;
+  };
 }
 
 export interface ProductFilters {

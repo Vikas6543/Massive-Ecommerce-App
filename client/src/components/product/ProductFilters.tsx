@@ -170,7 +170,7 @@ export default function ProductFilters({
           min={0}
           max={100000}
           step={500}
-          value={[filters.minPrice, filters.maxPrice]}
+          value={[filters.minPrice ?? 0, filters.maxPrice ?? 100000]}
           onValueChange={([min, max]) => {
             onFilterChange("minPrice", min);
             onFilterChange("maxPrice", max);
@@ -178,8 +178,8 @@ export default function ProductFilters({
           className="w-full"
         />
         <div className="flex items-center justify-between text-xs text-zinc-500">
-          <span>₹{filters.minPrice.toLocaleString()}</span>
-          <span>₹{filters.maxPrice.toLocaleString()}</span>
+          <span>₹{(filters.minPrice ?? 0).toLocaleString()}</span>
+          <span>₹{(filters.maxPrice ?? 100000).toLocaleString()}</span>
         </div>
       </motion.div>
 

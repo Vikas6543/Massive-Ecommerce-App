@@ -19,6 +19,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const { addToCart, isAddingToCart } = useCart();
 
+  console.log("product", product.images[0]);
+
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
@@ -53,7 +55,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* IMAGE */}
         <div className="relative aspect-square bg-zinc-50 overflow-hidden">
           <img
-            src={product.images[0]}
+            src={product.images[0].url}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -120,23 +122,21 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center gap-1">
             <Star size={12} className="fill-amber-400 text-amber-400" />
             <span className="text-xs font-medium text-zinc-700">
-              {product.ratings.toFixed(1)}
+              {product.ratings.average.toFixed(1)}
             </span>
             <span className="text-xs text-zinc-400">
-              ({product.reviewCount})
+              ({product.ratings.count})
             </span>
           </div>
 
           {/* PRICE */}
           <div className="flex items-center gap-2">
             <span className="text-base font-bold text-zinc-900">
-              {formatCurrency(product.salePrice || product.price)}
+              {formatCurrency(product.discountPrice)}
             </span>
-            {product.salePrice && (
-              <span className="text-xs text-zinc-400 line-through">
-                {formatCurrency(product.price)}
-              </span>
-            )}
+            <span className="text-xs text-zinc-400 line-through">
+              {formatCurrency(product.price)}
+            </span>
           </div>
         </div>
       </motion.div>

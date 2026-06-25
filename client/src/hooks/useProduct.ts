@@ -8,20 +8,17 @@ import {
 import { ProductFilters } from "@/types/product.types";
 
 export function useProduct(filters: ProductFilters = {}) {
-  // GET ALL PRODUCTS WITH FILTERS
   const {
-    data: productsData,
+    data,
     isLoading: isProductsLoading,
     isFetching: isProductsFetching,
-  } = useGetProductsQuery(filters, {
-    skip: false,
-  });
+  } = useGetProductsQuery(filters);
 
   return {
-    products: productsData?.products || [],
-    totalPages: productsData?.totalPages || 0,
-    currentPage: productsData?.currentPage || 1,
-    totalProducts: productsData?.totalProducts || 0,
+    products: data?.data?.products || [],
+    totalPages: data?.data?.pagination?.totalPages || 0,
+    currentPage: data?.data?.pagination?.page || 1,
+    totalProducts: data?.data?.pagination?.total || 0,
     isProductsLoading,
     isProductsFetching,
   };
@@ -65,7 +62,7 @@ export function useSearch(searchTerm: string) {
   );
 
   return {
-    searchResults: data?.products || [],
+    searchResults: data?.data?.products || [],
     isSearchLoading,
   };
 }

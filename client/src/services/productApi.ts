@@ -1,7 +1,7 @@
 import { api } from "./api";
 import {
   Product,
-  PaginatedProducts,
+  ProductsResponse,
   ProductFilters,
   Category,
 } from "@/types/product.types";
@@ -9,7 +9,7 @@ import {
 export const productApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // GET ALL PRODUCTS
-    getProducts: builder.query<PaginatedProducts, ProductFilters>({
+    getProducts: builder.query<ProductsResponse, ProductFilters>({
       query: (filters = {}) => {
         const params = new URLSearchParams();
         Object.entries(filters).forEach(([key, value]) => {
@@ -23,7 +23,7 @@ export const productApi = api.injectEndpoints({
     }),
 
     // GET SINGLE PRODUCT
-    getProduct: builder.query<{ data: Product }, string>({
+    getProduct: builder.query<{ success: boolean; data: Product }, string>({
       query: (slug) => `/products/${slug}`,
       providesTags: ["Products"],
     }),
@@ -41,7 +41,7 @@ export const productApi = api.injectEndpoints({
     }),
 
     // SEARCH PRODUCTS
-    searchProducts: builder.query<PaginatedProducts, string>({
+    searchProducts: builder.query<ProductsResponse, string>({
       query: (searchTerm) => `/search?q=${searchTerm}`,
       providesTags: ["Products"],
     }),

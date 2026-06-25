@@ -11,14 +11,6 @@ import ProductFilters from "@/components/product/ProductFilters";
 import { useProduct } from "@/hooks/useProduct";
 import { useDebounce } from "@/hooks/useDebounce";
 
-const DEFAULT_FILTERS = {
-  category: "",
-  minPrice: 0,
-  maxPrice: 100000,
-  rating: 0,
-  sort: "newest",
-};
-
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -33,7 +25,7 @@ const itemVariants = {
 };
 
 export default function ProductsPage() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<any>({});
   const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -50,19 +42,15 @@ export default function ProductsPage() {
     ...filters,
     search: debouncedSearch,
     page: currentPage,
-    limit: 12,
+    limit: 10,
   });
 
-  const handleFilterChange = useCallback(
-    (key: keyof typeof DEFAULT_FILTERS, value: any) => {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-      setCurrentPage(1);
-    },
-    [],
-  );
+  const handleFilterChange = useCallback((key: any, value: any) => {
+    setFilters((prev: any) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   const handleReset = useCallback(() => {
-    setFilters(DEFAULT_FILTERS);
     setSearchInput("");
     setCurrentPage(1);
   }, []);
