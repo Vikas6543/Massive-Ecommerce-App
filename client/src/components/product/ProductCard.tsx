@@ -46,7 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <motion.div
         whileHover={{ y: -4 }}
         transition={{ duration: 0.2 }}
-        className="group bg-white rounded-2xl border border-zinc-100 overflow-hidden hover:shadow-md hover:border-zinc-200 transition-all relative"
+        className="group bg-white rounded-2xl border border-zinc-100 overflow-hidden hover:shadow-md hover:border-zinc-200 transition-all relative shadow-xs"
       >
         {/* IMAGE */}
         <div className="relative aspect-square bg-zinc-50 overflow-hidden">
