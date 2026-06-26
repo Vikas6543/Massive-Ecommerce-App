@@ -19,8 +19,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const { addToCart, isAddingToCart } = useCart();
 
-  console.log("product", product.images[0]);
-
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {

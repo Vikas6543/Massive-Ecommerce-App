@@ -15,6 +15,7 @@ import { AddToCartRequest } from "@/types/cart.types";
 export function useCart() {
   const dispatch = useAppDispatch();
   const { isLoggedIn } = useAppSelector((state) => state.auth);
+  console.log("isLoggedIn", isLoggedIn);
   const { items, totalItems, totalPrice } = useAppSelector(
     (state) => state.cart,
   );

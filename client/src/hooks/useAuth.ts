@@ -74,6 +74,7 @@ export function useAuth() {
   const login = async (data: LoginRequest) => {
     try {
       const result = await loginMutation(data).unwrap();
+      console.log("login result", result);
       dispatch(setCredentials(result.data.user));
       toast.success("Welcome back!");
 
