@@ -53,12 +53,6 @@ export const authApi = api.injectEndpoints({
       },
     }),
 
-    // GET CURRENT USER
-    getMe: builder.query<AuthResponse, void>({
-      query: () => "/auth/me",
-      providesTags: ["Auth"],
-    }),
-
     // FORGOT PASSWORD
     forgotPassword: builder.mutation<MessageResponse, ForgotPasswordRequest>({
       query: (data) => ({
@@ -110,7 +104,6 @@ export const {
   // useVerifyEmailMutation,
   useLoginMutation,
   useLogoutMutation,
-  useGetMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
   // useResendOtpMutation,

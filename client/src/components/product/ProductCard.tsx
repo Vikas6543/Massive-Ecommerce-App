@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, ShoppingCart, Star, Loader2 } from "lucide-react";
+import { Heart, ShoppingCart, Star, Loader2, Check } from "lucide-react";
 import { Product } from "@/types/product.types";
-import { formatCurrency, calculateDiscount } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { useAppSelector } from "@/store";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "sonner";
@@ -17,6 +17,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const { items: cartItems } = useAppSelector((state) => state.cart);
   const { addToCart, isAddingToCart } = useCart();
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -34,8 +35,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     await addToCart({
       productId: product._id,
       quantity: 1,
-      price: product.salePrice || product.price,
-      variant: undefined,
     });
   };
 
@@ -75,12 +74,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
 
           {/* ACTION BUTTONS */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-3 right-3 flex flex-col gap-2 group-hover:opacity-100 transition-opacity opacity-0">
             {/* WISHLIST */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={handleWishlist}
-              className="w-9 h-9 bg-white rounded-xl shadow-sm flex items-center justify-center hover:bg-zinc-50 transition-colors"
+              className="w-9 h-9 bg-white rounded-xl shadow-sm flex items-center justify-center hover:bg-zinc-50 transition-colors cursor-pointer"
             >
               <Heart
                 size={16}
@@ -95,12 +94,20 @@ export default function ProductCard({ product }: ProductCardProps) {
               whileTap={{ scale: 0.9 }}
               onClick={handleAddToCart}
               disabled={product.stock === 0 || isAddingToCart}
-              className="w-9 h-9 bg-primary rounded-xl shadow-sm flex items-center justify-center hover:bg-primary-hover transition-colors disabled:opacity-50"
+              className="w-9 h-9 bg-primary rounded-xl shadow-sm flex items-center justify-center hover:bg-primary-hover transition-colors disabled:opacity-50 cursor-pointer relative"
             >
               {isAddingToCart ? (
                 <Loader2 size={14} className="text-white animate-spin" />
               ) : (
-                <ShoppingCart size={16} className="text-white" />
+                <div>
+                  <ShoppingCart size={16} className="text-white" />
+                  {cartItems.some((item) => item.productId === product._id) && (
+                    <Check
+                      size={16}
+                      className="text-white absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5"
+                    />
+                  )}
+                </div>
               )}
             </motion.button>
           </div>

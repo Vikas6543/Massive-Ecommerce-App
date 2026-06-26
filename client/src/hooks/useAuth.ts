@@ -7,7 +7,6 @@ import {
   useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
-  useGetMeQuery,
   // useVerifyEmailMutation,
   // useResendOtpMutation,
   useVerifyEmailTokenMutation,
@@ -42,21 +41,6 @@ export function useAuth() {
   const [resetPasswordMutation, { isLoading: isResetPasswordLoading }] =
     useResetPasswordMutation();
 
-  // FETCH CURRENT USER ON APP LOAD
-  const { data: meData, isLoading: isMeLoading } = useGetMeQuery(undefined, {
-    skip: !isLoggedIn,
-  });
-
-  useEffect(() => {
-    if (meData?.data?.user) {
-      dispatch(setCredentials(meData.data.user));
-    }
-  }, [meData, dispatch]);
-
-  useEffect(() => {
-    dispatch(setLoading(isMeLoading));
-  }, [isMeLoading, dispatch]);
-
   // REGISTER
   const register = async (data: RegisterRequest) => {
     try {
@@ -76,6 +60,7 @@ export function useAuth() {
       const result = await loginMutation(data).unwrap();
       console.log("login result", result);
       dispatch(setCredentials(result.data.user));
+      localStorage.setItem("user", JSON.stringify(result.data.user));
       toast.success("Welcome back!");
 
       // ROLE BASED REDIRECT

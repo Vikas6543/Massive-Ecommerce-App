@@ -47,8 +47,6 @@ export interface CartResponse {
 export interface AddToCartRequest {
   productId: string;
   quantity: number;
-  price: number;
-  variant?: CartVariant;
 }
 
 export interface UpdateCartRequest {

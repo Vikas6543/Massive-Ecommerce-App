@@ -1,6 +1,5 @@
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { clearCart as clearCartAction } from "@/store/slices/cartSlice";
 import {
   useGetCartQuery,
   useAddToCartMutation,
@@ -15,7 +14,6 @@ import { AddToCartRequest } from "@/types/cart.types";
 export function useCart() {
   const dispatch = useAppDispatch();
   const { isLoggedIn } = useAppSelector((state) => state.auth);
-  console.log("isLoggedIn", isLoggedIn);
   const { items, totalItems, totalPrice } = useAppSelector(
     (state) => state.cart,
   );

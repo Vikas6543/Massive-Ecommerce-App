@@ -29,6 +29,7 @@ export const cartApi = api.injectEndpoints({
                   image: item.product.images[0],
                   stock: item.product.stock,
                   variant: item.variant,
+                  slug: item.product.slug,
                 })),
               ),
             );
@@ -40,7 +41,7 @@ export const cartApi = api.injectEndpoints({
     // ADD TO CART
     addToCart: builder.mutation<CartResponse, AddToCartRequest>({
       query: (data) => ({
-        url: "/cart",
+        url: "/cart/add",
         method: "POST",
         body: data,
       }),

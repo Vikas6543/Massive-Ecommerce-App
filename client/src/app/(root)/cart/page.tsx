@@ -133,7 +133,7 @@ export default function CartPage() {
           <h2 className="text-2xl font-bold text-zinc-900">
             Your cart is empty
           </h2>
-          <p className="text-zinc-500 text-sm max-w-xs">
+          <p className="text-zinc-500 text-sm">
             Looks like you haven&apos;t added anything to your cart yet.
           </p>
           <Link href={ROUTES.PRODUCTS}>
@@ -154,10 +154,10 @@ export default function CartPage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center justify-between mb-8"
       >
-        <div>
-          <h1 className="text-2xl font-bold text-zinc-900">Your cart</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900">Your Cart</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
-            {totalItems} {totalItems === 1 ? "item" : "items"}
+            ({totalItems} {totalItems === 1 ? "item" : "items"})
           </p>
         </div>
         <motion.button
@@ -165,14 +165,14 @@ export default function CartPage() {
           whileTap={{ scale: 0.98 }}
           onClick={clearCart}
           disabled={isClearingCart}
-          className="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-600 transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-600 transition-colors disabled:opacity-50 border border-red-400 hover:border-red-600 rounded-lg px-3 py-1.5 cursor-pointer"
         >
           {isClearingCart ? (
             <Loader2 size={14} className="animate-spin" />
           ) : (
             <Trash2 size={14} />
           )}
-          Clear cart
+          Clear Cart
         </motion.button>
       </motion.div>
 
@@ -196,13 +196,13 @@ export default function CartPage() {
                 >
                   <div className="flex gap-4">
                     {/* PRODUCT IMAGE */}
-                    <Link href={`/products/${item.productId}`}>
+                    <Link href={`/products/${item.slug}`}>
                       <motion.div
                         whileHover={{ scale: 1.03 }}
                         className="w-24 h-24 sm:w-28 sm:h-28 bg-zinc-50 rounded-xl overflow-hidden shrink-0"
                       >
                         <img
-                          src={item.images}
+                          src={item.image.url}
                           alt={item.name}
                           className="w-full h-full object-cover"
                         />
