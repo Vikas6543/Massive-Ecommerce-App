@@ -79,14 +79,15 @@ export function useAuth() {
       toast.success("Welcome back!");
 
       // ROLE BASED REDIRECT
-      const role = result.data.user.role;
-      if (role === "admin") {
-        router.push(ROUTES.ADMIN_DASHBOARD);
-      } else if (role === "seller") {
-        router.push(ROUTES.SELLER_DASHBOARD);
-      } else {
-        router.push(ROUTES.HOME);
-      }
+      // const role = result.data.user.role;
+      // if (role === "admin") {
+      //   router.push(ROUTES.ADMIN_DASHBOARD);
+      // } else if (role === "seller") {
+      //   router.push(ROUTES.SELLER_DASHBOARD);
+      // } else {
+      //   router.push(ROUTES.HOME);
+      // }
+      router.push(ROUTES.HOME);
     } catch (error: any) {
       toast.error(error?.data?.message || "Login failed!");
     }

@@ -28,14 +28,15 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action: PayloadAction<User>) => {
+      console.log("setCredentials action.payload", action.payload);
       state.user = action.payload;
       state.isLoggedIn = true;
       state.isLoading = false;
     },
     logout: (state) => {
-      state.user = null;
-      state.isLoggedIn = false;
-      state.isLoading = false;
+      // state.user = null;
+      // state.isLoggedIn = false;
+      // state.isLoading = false;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
