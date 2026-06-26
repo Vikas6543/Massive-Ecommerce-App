@@ -81,7 +81,7 @@ export default function ProductImages({
 
       {/* THUMBNAILS */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-2 overflow-x-auto pb-1 justify-center">
           {images.map((image, index) => (
             <motion.button
               key={index}

@@ -26,7 +26,7 @@ import ProductCard from "@/components/product/ProductCard";
 import { useProductDetail, useProduct } from "@/hooks/useProduct";
 import { useCart } from "@/hooks/useCart";
 import { useAppSelector } from "@/store";
-import { formatCurrency, calculateDiscount } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -51,10 +51,6 @@ export default function ProductDetailPage() {
     limit: 4,
   });
 
-  const discount = product?.salePrice
-    ? calculateDiscount(product.price, product.salePrice)
-    : 0;
-
   const handleAddToCart = async () => {
     if (!product) return;
     if (
@@ -67,7 +63,7 @@ export default function ProductDetailPage() {
     await addToCart({
       productId: product._id,
       quantity,
-      price: product.salePrice || product.price,
+      price: product.discountPrice || product.price,
       variant: selectedVariant,
     });
   };
@@ -121,7 +117,8 @@ export default function ProductDetailPage() {
         </div>
         <h2 className="text-xl font-bold text-zinc-900">Product not found</h2>
         <p className="text-zinc-500 text-sm">
-          The product you're looking for doesn't exist or has been removed.
+          The product you&apos;re looking for doesn&apos;t exist or has been
+          removed.
         </p>
         <Link href="/products">
           <Button className="bg-primary hover:bg-primary-hover text-white">
@@ -164,14 +161,17 @@ export default function ProductDetailPage() {
       </motion.nav>
 
       {/* MAIN CONTENT */}
-      <div className="grid lg:grid-cols-2 gap-12">
+      <div className="grid lg:grid-cols-2 gap-12 -mt-8">
         {/* LEFT — IMAGES */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <ProductImages images={product.images} productName={product.name} />
+          <ProductImages
+            images={product.images.map((image) => image.url)}
+            productName={product.name}
+          />
         </motion.div>
 
         {/* RIGHT — DETAILS */}
@@ -179,20 +179,25 @@ export default function ProductDetailPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="space-y-6"
+          className="space-y-4"
         >
           {/* BRAND + CATEGORY */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-primary bg-primary-light px-2.5 py-1 rounded-lg">
               {product.category?.name}
             </span>
             <span className="text-xs text-zinc-400">{product.brand?.name}</span>
-          </div>
+          </div> */}
 
           {/* NAME */}
           <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 leading-tight">
             {product.name}
           </h1>
+
+          {/* DESCRIPTION */}
+          <p className="text-sm text-zinc-600 leading-relaxed">
+            {product.description}
+          </p>
 
           {/* RATING */}
           <div className="flex items-center gap-3">
@@ -202,33 +207,30 @@ export default function ProductDetailPage() {
                   key={i}
                   size={16}
                   className={
-                    i < Math.round(product.ratings)
+                    i < Math.round(product.ratings.average)
                       ? "fill-amber-400 text-amber-400"
                       : "text-zinc-300"
                   }
                 />
               ))}
             </div>
-            <span className="text-sm font-medium text-zinc-700">
-              {product.ratings.toFixed(1)}
-            </span>
             <span className="text-sm text-zinc-400">
-              ({product.reviewCount} reviews)
+              ({product.ratings.count} reviews)
             </span>
           </div>
 
           {/* PRICE */}
           <div className="flex items-end gap-3">
             <span className="text-3xl font-bold text-zinc-900">
-              {formatCurrency(product.salePrice || product.price)}
+              {formatCurrency(product.discountPrice || product.price)}
             </span>
-            {product.salePrice && (
+            {product.discountPrice && (
               <>
                 <span className="text-lg text-zinc-400 line-through mb-0.5">
                   {formatCurrency(product.price)}
                 </span>
                 <span className="text-sm font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-lg mb-0.5">
-                  {discount}% off
+                  {product.discountPercentage}% off
                 </span>
               </>
             )}
@@ -264,7 +266,7 @@ export default function ProductDetailPage() {
           )}
 
           {/* QUANTITY */}
-          <div className="space-y-2">
+          <div className="space-y-2 flex items-center gap-2">
             <label className="text-sm font-semibold text-zinc-800">
               Quantity
             </label>
@@ -297,7 +299,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* ACTION BUTTONS */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-2">
             <Button
               onClick={handleAddToCart}
               disabled={isAddingToCart || product.stock === 0}
@@ -367,7 +369,7 @@ export default function ProductDetailPage() {
       </div>
 
       {/* TABS — description + reviews */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -385,7 +387,7 @@ export default function ProductDetailPage() {
               value="reviews"
               className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary"
             >
-              Reviews ({product.reviewCount})
+              Reviews ({product.ratings.count})
             </TabsTrigger>
           </TabsList>
 
@@ -414,16 +416,16 @@ export default function ProductDetailPage() {
               <ProductReviews
                 productId={product._id}
                 reviews={[]}
-                ratings={product.ratings}
-                reviewCount={product.reviewCount}
+                ratings={product.ratings.average}
+                reviewCount={product.ratings.count}
               />
             </div>
           </TabsContent>
         </Tabs>
-      </motion.div>
+      </motion.div> */}
 
       {/* RELATED PRODUCTS */}
-      {relatedProducts.length > 0 && (
+      {/* {relatedProducts.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -459,7 +461,7 @@ export default function ProductDetailPage() {
               ))}
           </div>
         </motion.div>
-      )}
+      )} */}
     </div>
   );
 }
