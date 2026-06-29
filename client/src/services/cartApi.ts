@@ -70,7 +70,7 @@ export const cartApi = api.injectEndpoints({
     // CLEAR CART
     clearCart: builder.mutation<MessageResponse, void>({
       query: () => ({
-        url: "/cart",
+        url: "/cart/clear",
         method: "DELETE",
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
