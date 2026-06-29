@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/hooks/useCart";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { useAppSelector } from "@/store";
 import { formatCurrency } from "@/lib/utils";
 import { ROUTES } from "@/config/constants";
@@ -38,6 +39,7 @@ const itemVariants = {
 export default function CartPage() {
   const [couponInput, setCouponInput] = useState("");
   const [showCouponInput, setShowCouponInput] = useState(false);
+  const [showClearCartModal, setShowClearCartModal] = useState(false);
 
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
@@ -58,9 +60,8 @@ export default function CartPage() {
     isApplyingCoupon,
   } = useCart();
 
-  const discount = cartData?.coupon?.discountAmount || 0;
-  const deliveryCharge = totalPrice > 499 ? 0 : 49;
-  const finalTotal = totalPrice - discount + deliveryCharge;
+  // const discount = cartData?.coupon?.discountAmount || 0;
+  // const finalTotal = totalPrice - discount + deliveryCharge;
 
   const handleApplyCoupon = async () => {
     if (!couponInput.trim()) return;
@@ -146,6 +147,9 @@ export default function CartPage() {
     );
   }
 
+  console.log("Cart Items", items);
+  console.log("Cart Data", cartData);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* HEADER */}
@@ -157,13 +161,14 @@ export default function CartPage() {
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold text-zinc-900">Your Cart</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
-            ({totalItems} {totalItems === 1 ? "item" : "items"})
+            ({cartData?.totalItems}{" "}
+            {cartData?.totalItems === 1 ? "item" : "items"})
           </p>
         </div>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={clearCart}
+          onClick={() => setShowClearCartModal(true)}
           disabled={isClearingCart}
           className="flex items-center gap-1.5 text-sm text-red-400 hover:text-red-600 transition-colors disabled:opacity-50 border border-red-400 hover:border-red-600 rounded-lg px-3 py-1.5 cursor-pointer"
         >
@@ -220,9 +225,9 @@ export default function CartPage() {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => removeFromCart(item.productId)}
+                          onClick={() => removeFromCart(item.cartId)}
                           disabled={isRemovingFromCart}
-                          className="text-zinc-300 hover:text-red-400 transition-colors shrink-0"
+                          className="text-zinc-300 hover:text-red-400 transition-colors shrink-0 cursor-pointer"
                         >
                           <X size={18} />
                         </motion.button>
@@ -287,6 +292,14 @@ export default function CartPage() {
                           <p className="text-xs text-zinc-400">
                             {formatCurrency(item.price)} each
                           </p>
+                          --------
+                          <span className="text-base font-bold text-zinc-900">
+                            {formatCurrency(item.discountPrice)}
+                          </span>
+                          <span className="text-xs text-zinc-400 line-through">
+                            {formatCurrency(item.price)}
+                          </span>
+                          {/* <span className="text-xs">({item.discountPercentage}% off)</span> */}
                         </div>
                       </div>
                     </div>
@@ -329,13 +342,13 @@ export default function CartPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">
-                  Subtotal ({totalItems} items)
+                  Subtotal ({cartData?.totalItems} items)
                 </span>
                 <span className="font-medium text-zinc-900">
-                  {formatCurrency(totalPrice)}
+                  {formatCurrency(cartData?.subtotal || 0)}
                 </span>
               </div>
-
+              {/* 
               {discount > 0 && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
@@ -356,8 +369,8 @@ export default function CartPage() {
                     -{formatCurrency(discount)}
                   </span>
                 </motion.div>
-              )}
-
+              )} */}
+              {/* 
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">Delivery</span>
                 <span
@@ -369,9 +382,9 @@ export default function CartPage() {
                     ? "Free"
                     : formatCurrency(deliveryCharge)}
                 </span>
-              </div>
+              </div> */}
 
-              {deliveryCharge > 0 && (
+              {/* {deliveryCharge > 0 && (
                 <p className="text-xs text-zinc-400">
                   Add{" "}
                   <span className="text-primary font-medium">
@@ -379,7 +392,7 @@ export default function CartPage() {
                   </span>{" "}
                   more for free delivery
                 </p>
-              )}
+              )} */}
             </div>
 
             <div className="h-px bg-zinc-100" />
@@ -388,7 +401,7 @@ export default function CartPage() {
             <div className="flex justify-between">
               <span className="font-bold text-zinc-900">Total</span>
               <span className="font-bold text-xl text-zinc-900">
-                {formatCurrency(finalTotal)}
+                {formatCurrency(cartData?.subtotal || 0)}
               </span>
             </div>
 
@@ -454,6 +467,23 @@ export default function CartPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* CLEAR CART MODAL */}
+      <ConfirmDialog
+        isOpen={showClearCartModal}
+        onClose={() => setShowClearCartModal(false)}
+        onConfirm={async () => {
+          await clearCart();
+          setShowClearCartModal(false);
+        }}
+        title="Clear your cart?"
+        description="This will remove all items from your cart. This action cannot be undone."
+        confirmText="Yes"
+        cancelText="No"
+        variant="danger"
+        icon="trash"
+        isLoading={isClearingCart}
+      />
     </div>
   );
 }

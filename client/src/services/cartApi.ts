@@ -6,7 +6,7 @@ import {
   UpdateCartRequest,
   ApplyCouponRequest,
 } from "@/types/cart.types";
-import { setCart, clearCart } from "@/store/slices/cartSlice";
+import { setCart, clearCart, removeFromCart } from "@/store/slices/cartSlice";
 
 export const cartApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -19,20 +19,19 @@ export const cartApi = api.injectEndpoints({
           const { data }: any = await queryFulfilled;
           if (data?.data?.items) {
             // sync cart with Redux
-            dispatch(
-              setCart(
-                data.data.items.map((item: any) => ({
-                  productId: item.product._id,
-                  name: item.product.name,
-                  price: item.price,
-                  quantity: item.quantity,
-                  image: item.product.images[0],
-                  stock: item.product.stock,
-                  variant: item.variant,
-                  slug: item.product.slug,
-                })),
-              ),
-            );
+            const cartItems = data.data.items.map((item: any) => ({
+              productId: item.product._id,
+              name: item.product.name,
+              price: item.price,
+              quantity: item.quantity,
+              image: item.product.images[0],
+              stock: item.product.stock,
+              variant: item.variant,
+              slug: item.product.slug,
+              cartId: item._id,
+              discountPrice: item.discountPrice,
+            }));
+            dispatch(setCart(cartItems));
           }
         } catch {}
       },
@@ -61,9 +60,15 @@ export const cartApi = api.injectEndpoints({
     // REMOVE ITEM
     removeFromCart: builder.mutation<MessageResponse, string>({
       query: (productId) => ({
-        url: `/cart/${productId}`,
+        url: `/cart/remove/${productId}`,
         method: "DELETE",
       }),
+      async onQueryStarted(productId, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(removeFromCart(productId));
+        } catch {}
+      },
       invalidatesTags: ["Cart"],
     }),
 
