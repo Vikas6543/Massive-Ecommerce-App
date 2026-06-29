@@ -7,7 +7,6 @@ import {
   useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
-  useGetMeQuery,
   // useVerifyEmailMutation,
   // useResendOtpMutation,
   useVerifyEmailTokenMutation,
@@ -42,21 +41,6 @@ export function useAuth() {
   const [resetPasswordMutation, { isLoading: isResetPasswordLoading }] =
     useResetPasswordMutation();
 
-  // FETCH CURRENT USER ON APP LOAD
-  const { data: meData, isLoading: isMeLoading } = useGetMeQuery(undefined, {
-    skip: !isLoggedIn,
-  });
-
-  useEffect(() => {
-    if (meData?.data?.user) {
-      dispatch(setCredentials(meData.data.user));
-    }
-  }, [meData, dispatch]);
-
-  useEffect(() => {
-    dispatch(setLoading(isMeLoading));
-  }, [isMeLoading, dispatch]);
-
   // REGISTER
   const register = async (data: RegisterRequest) => {
     try {
@@ -74,18 +58,21 @@ export function useAuth() {
   const login = async (data: LoginRequest) => {
     try {
       const result = await loginMutation(data).unwrap();
+      console.log("login result", result);
       dispatch(setCredentials(result.data.user));
+      localStorage.setItem("user", JSON.stringify(result.data.user));
       toast.success("Welcome back!");
 
       // ROLE BASED REDIRECT
-      const role = result.data.user.role;
-      if (role === "admin") {
-        router.push(ROUTES.ADMIN_DASHBOARD);
-      } else if (role === "seller") {
-        router.push(ROUTES.SELLER_DASHBOARD);
-      } else {
-        router.push(ROUTES.HOME);
-      }
+      // const role = result.data.user.role;
+      // if (role === "admin") {
+      //   router.push(ROUTES.ADMIN_DASHBOARD);
+      // } else if (role === "seller") {
+      //   router.push(ROUTES.SELLER_DASHBOARD);
+      // } else {
+      //   router.push(ROUTES.HOME);
+      // }
+      router.push(ROUTES.HOME);
     } catch (error: any) {
       toast.error(error?.data?.message || "Login failed!");
     }

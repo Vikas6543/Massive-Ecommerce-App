@@ -1,0 +1,145 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Heart, ShoppingCart, Star, Loader2, Check } from "lucide-react";
+import { Product } from "@/types/product.types";
+import { formatCurrency } from "@/lib/utils";
+import { useAppSelector } from "@/store";
+import { useCart } from "@/hooks/useCart";
+import { toast } from "sonner";
+
+interface ProductCardProps {
+  product: Product;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const { items: cartItems } = useAppSelector((state) => state.cart);
+  const { addToCart, isAddingToCart } = useCart();
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      toast.error("Please login to add to wishlist");
+      return;
+    }
+    setIsWishlisted(!isWishlisted);
+    toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
+  };
+
+  const checkItemInCart = () => {
+    return cartItems.some((item) => item.productId === product._id);
+  };
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (checkItemInCart()) {
+      toast.error("Product already in cart");
+      return;
+    }
+    await addToCart({
+      productId: product._id,
+      quantity: 1,
+    });
+  };
+
+  return (
+    <Link href={`/products/${product.slug}`}>
+      <motion.div
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.2 }}
+        className="group bg-white rounded-2xl border border-zinc-100 overflow-hidden hover:shadow-md hover:border-zinc-200 transition-all relative shadow-xs"
+      >
+        {/* IMAGE */}
+        <div className="relative aspect-square bg-zinc-50 overflow-hidden">
+          <img
+            src={product.images[0].url}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+
+          {/* RATING */}
+          <div className="flex items-center gap-1 absolute top-46 left-2 bg-zinc-100 px-1.5 py-1 rounded-lg border border-amber-50 shadow-sm">
+            <Star size={12} className="fill-amber-400 text-amber-400" />
+            <span className="text-xs font-medium text-zinc-700">
+              {product.ratings.average}
+            </span>
+            {/* <span className="text-xs text-zinc-400">
+              ({product.ratings.count})
+            </span> */}
+          </div>
+
+          {/* OUT OF STOCK */}
+          {product.stock === 0 && (
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <span className="bg-white text-zinc-900 text-xs font-bold px-3 py-1.5 rounded-lg">
+                Out of stock
+              </span>
+            </div>
+          )}
+
+          {/* ACTION BUTTONS */}
+          <div className="absolute top-3 right-3 flex flex-col gap-2 group-hover:opacity-100 transition-opacity opacity-0">
+            {/* WISHLIST */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={handleWishlist}
+              className="w-9 h-9 bg-white rounded-xl shadow-sm flex items-center justify-center hover:bg-zinc-50 transition-colors cursor-pointer"
+            >
+              <Heart
+                size={16}
+                className={
+                  isWishlisted ? "fill-red-500 text-red-500" : "text-zinc-600"
+                }
+              />
+            </motion.button>
+
+            {/* ADD TO CART */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={handleAddToCart}
+              disabled={product.stock === 0 || isAddingToCart}
+              className="w-9 h-9 bg-primary rounded-xl shadow-sm flex items-center justify-center hover:bg-primary-hover transition-colors disabled:opacity-50 cursor-pointer relative"
+            >
+              {isAddingToCart ? (
+                <Loader2 size={14} className="text-white animate-spin" />
+              ) : (
+                <div>
+                  <ShoppingCart size={16} className="text-white" />
+                  {checkItemInCart() && (
+                    <Check
+                      size={16}
+                      className="text-white absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5"
+                    />
+                  )}
+                </div>
+              )}
+            </motion.button>
+          </div>
+        </div>
+
+        {/* PRODUCT DETAILS */}
+        <div className="p-4 space-y-2">
+          {/* PRODUCT NAME */}
+          <h3 className="text-sm font-semibold text-zinc-900 line-clamp-2 leading-snug">
+            {product.name}
+          </h3>
+
+          {/* PRICE */}
+          <div className="flex items-center gap-2">
+            <span className="text-base font-bold text-zinc-900">
+              {formatCurrency(product.discountPrice)}
+            </span>
+            <span className="text-xs text-zinc-400 line-through">
+              {formatCurrency(product.price)}
+            </span>
+            <span className="text-xs">({product.discountPercentage}% off)</span>
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}

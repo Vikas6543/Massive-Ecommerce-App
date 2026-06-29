@@ -151,6 +151,13 @@ productSchema.virtual("totalStock").get(function () {
   return this.stock;
 });
 
+// ✅ Virtual - calculate discount percentage
+productSchema.virtual("discountPercentage").get(function () {
+  if (this.discountPrice && this.discountPrice < this.price) {
+    return Math.round(((this.price - this.discountPrice) / this.price) * 100);
+  }
+});
+
 productSchema.set("toJSON", { virtuals: true });
 productSchema.set("toObject", { virtuals: true });
 

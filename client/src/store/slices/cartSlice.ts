@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // TYPES
 interface CartItem {
+  cartId: string;
   productId: string;
   name: string;
   price: number;
@@ -58,14 +59,12 @@ const cartSlice = createSlice({
       const existing = state.items.find(
         (item) => item.productId === action.payload.productId,
       );
+      console.log("existing", existing);
       if (existing) {
         existing.quantity += action.payload.quantity;
       } else {
         state.items.push(action.payload);
       }
-      const { totalItems, totalPrice } = calculateTotals(state.items);
-      state.totalItems = totalItems;
-      state.totalPrice = totalPrice;
     },
 
     removeFromCart: (state, action: PayloadAction<string>) => {

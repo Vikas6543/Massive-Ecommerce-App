@@ -101,10 +101,11 @@ export const getAllProducts = asyncHandler(async (req, res) => {
 
   // sorting
   let sortOption = { createdAt: -1 }; // default: newest first
-  if (sort === "price-low") sortOption = { price: 1 };
-  if (sort === "price-high") sortOption = { price: -1 };
+  if (sort === "price-low") sortOption = { discountPrice: 1 };
+  if (sort === "price-high") sortOption = { discountPrice: -1 };
   if (sort === "rating") sortOption = { "ratings.average": -1 };
   if (sort === "popular") sortOption = { sold: -1 };
+  if (sort === "newest") sortOption = { createdAt: -1 };
 
   const skip = (Number(page) - 1) * Number(limit);
 
