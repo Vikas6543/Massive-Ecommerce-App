@@ -124,7 +124,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
     await order.save();
 
     // create payment record
-    await Payment.create({
+    await PaymentModel.create({
       order: order._id,
       user: req.user._id,
       razorpayOrderId: razorpayOrder.id,
@@ -182,12 +182,16 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     orderId,
   } = req.body;
 
+  console.log("razorpay_order_id:", razorpay_order_id);
+  console.log("razorpay_payment_id:", razorpay_payment_id);
+  console.log("razorpay_signature:", razorpay_signature);
+
   // verify signature
   const body = razorpay_order_id + "|" + razorpay_payment_id;
   const expectedSignature = crypto
     .createHmac("sha256", config.RAZORPAY_KEY_SECRET)
     .update(body)
-    .toString("hex");
+    .digest("hex");
 
   const isValid = expectedSignature === razorpay_signature;
 
@@ -207,7 +211,7 @@ export const verifyPayment = asyncHandler(async (req, res) => {
   await order.save();
 
   // update payment record
-  await Payment.findOneAndUpdate(
+  await PaymentModel.findOneAndUpdate(
     { razorpayOrderId: razorpay_order_id },
     {
       razorpayPaymentId: razorpay_payment_id,

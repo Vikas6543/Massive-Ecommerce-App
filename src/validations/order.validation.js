@@ -16,7 +16,9 @@ export const placeOrderSchema = Joi.object({
         "string.pattern.base": "Please enter a valid phone number",
         "any.required": "Phone number is required",
       }),
-    street: Joi.string().required(),
+    addressLine1: Joi.string().required().messages({
+      "any.required": "Address Line 1 is required",
+    }),
     city: Joi.string().required(),
     state: Joi.string().required(),
     pincode: Joi.string()

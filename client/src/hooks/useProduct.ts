@@ -3,8 +3,9 @@ import {
   useGetProductQuery,
   useGetFeaturedProductsQuery,
   useGetCategoriesQuery,
-  useSearchProductsQuery,
+  // useSearchProductsQuery,
 } from "@/services/productApi";
+import { useSearchProductsQuery } from "@/services/searchApi";
 import { ProductFilters } from "@/types/product.types";
 
 export function useProduct(filters: ProductFilters = {}) {
@@ -12,7 +13,11 @@ export function useProduct(filters: ProductFilters = {}) {
     data,
     isLoading: isProductsLoading,
     isFetching: isProductsFetching,
-  } = useGetProductsQuery(filters);
+  } = useGetProductsQuery(filters, {
+    skip:
+      Object.keys(filters).length === 0 ||
+      (filters.category !== undefined && !filters.category),
+  });
 
   return {
     products: data?.data?.products || [],

@@ -24,7 +24,7 @@ export const cartApi = api.injectEndpoints({
               name: item.product.name,
               price: item.product.price,
               quantity: item.quantity,
-              image: item.product.images[0],
+              image: item.product.images[0]?.url,
               stock: item.product.stock,
               variant: item.variant,
               slug: item.product.slug,

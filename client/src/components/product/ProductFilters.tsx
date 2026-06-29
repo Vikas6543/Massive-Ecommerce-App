@@ -25,8 +25,8 @@ const ratings = [4, 3, 2, 1];
 
 const sortOptions = [
   { label: "Newest first", value: "newest" },
-  { label: "Price: Low to high", value: "price_asc" },
-  { label: "Price: High to low", value: "price_desc" },
+  { label: "Price: Low to high", value: "price-low" },
+  { label: "Price: High to low", value: "price-high" },
   { label: "Most popular", value: "popular" },
   { label: "Top rated", value: "rating" },
 ];

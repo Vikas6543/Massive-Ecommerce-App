@@ -47,7 +47,7 @@ export default function ProductDetailPage() {
 
   // RELATED PRODUCTS
   const { products: relatedProducts } = useProduct({
-    category: product?.category?.slug,
+    category: product?.category?.slug || "",
     limit: 4,
   });
 

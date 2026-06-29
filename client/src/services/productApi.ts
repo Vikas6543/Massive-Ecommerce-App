@@ -41,10 +41,10 @@ export const productApi = api.injectEndpoints({
     }),
 
     // SEARCH PRODUCTS
-    searchProducts: builder.query<ProductsResponse, string>({
-      query: (searchTerm) => `/search?q=${searchTerm}`,
-      providesTags: ["Products"],
-    }),
+    // searchProducts: builder.query<ProductsResponse, string>({
+    //   query: (searchTerm) => `/search?q=${searchTerm}`,
+    //   providesTags: ["Products"],
+    // }),
   }),
 });
 
@@ -53,5 +53,5 @@ export const {
   useGetProductQuery,
   useGetFeaturedProductsQuery,
   useGetCategoriesQuery,
-  useSearchProductsQuery,
+  // useSearchProductsQuery,
 } = productApi;

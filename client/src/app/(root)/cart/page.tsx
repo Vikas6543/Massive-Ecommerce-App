@@ -46,14 +46,11 @@ export default function CartPage() {
   const {
     cartData,
     items,
-    totalItems,
-    totalPrice,
     isCartLoading,
     updateQuantity,
     removeFromCart,
     clearCart,
     applyCoupon,
-    removeCoupon,
     isUpdatingCart,
     isRemovingFromCart,
     isClearingCart,
@@ -147,8 +144,6 @@ export default function CartPage() {
     );
   }
 
-  console.log("items", items);
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* HEADER */}
@@ -160,7 +155,7 @@ export default function CartPage() {
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold text-zinc-900">Your Cart</h1>
           <p className="text-sm text-zinc-500 mt-0.5">
-            ({cartData?.totalItems}{" "}
+            ({cartData?.items.length}{" "}
             {cartData?.totalItems === 1 ? "item" : "items"})
           </p>
         </div>
@@ -332,7 +327,7 @@ export default function CartPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-zinc-500">
-                  Subtotal ({cartData?.totalItems} items)
+                  Subtotal ({cartData?.items.length} items)
                 </span>
                 <span className="font-medium text-zinc-900">
                   {formatCurrency(cartData?.subtotal || 0)}
