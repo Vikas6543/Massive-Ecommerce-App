@@ -147,8 +147,7 @@ export default function CartPage() {
     );
   }
 
-  console.log("Cart Items", items);
-  console.log("Cart Data", cartData);
+  console.log("items", items);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -249,6 +248,8 @@ export default function CartPage() {
                         </div>
                       )}
 
+                      {console.log("itessm", item)}
+
                       <div className="flex items-center justify-between">
                         {/* QUANTITY */}
                         <div className="flex items-center border border-zinc-200 rounded-xl overflow-hidden">
@@ -256,11 +257,8 @@ export default function CartPage() {
                             whileTap={{ scale: 0.9 }}
                             onClick={() =>
                               item.quantity > 1
-                                ? updateQuantity(
-                                    item.productId,
-                                    item.quantity - 1,
-                                  )
-                                : removeFromCart(item.productId)
+                                ? updateQuantity(item.cartId, item.quantity - 1)
+                                : removeFromCart(item.cartId)
                             }
                             disabled={isUpdatingCart}
                             className="w-8 h-8 flex items-center justify-center hover:bg-zinc-50 transition-colors disabled:opacity-50"
@@ -273,7 +271,7 @@ export default function CartPage() {
                           <motion.button
                             whileTap={{ scale: 0.9 }}
                             onClick={() =>
-                              updateQuantity(item.productId, item.quantity + 1)
+                              updateQuantity(item.cartId, item.quantity + 1)
                             }
                             disabled={
                               isUpdatingCart || item.quantity >= item.stock
@@ -286,20 +284,12 @@ export default function CartPage() {
 
                         {/* PRICE */}
                         <div className="text-right">
-                          <p className="text-base font-bold text-zinc-900">
-                            {formatCurrency(item.price * item.quantity)}
-                          </p>
-                          <p className="text-xs text-zinc-400">
-                            {formatCurrency(item.price)} each
-                          </p>
-                          --------
                           <span className="text-base font-bold text-zinc-900">
                             {formatCurrency(item.discountPrice)}
-                          </span>
+                          </span>{" "}
                           <span className="text-xs text-zinc-400 line-through">
                             {formatCurrency(item.price)}
                           </span>
-                          {/* <span className="text-xs">({item.discountPercentage}% off)</span> */}
                         </div>
                       </div>
                     </div>

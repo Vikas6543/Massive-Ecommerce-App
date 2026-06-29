@@ -92,6 +92,7 @@ export const getCart = asyncHandler(async (req, res) => {
 // ✅ UPDATE CART ITEM QUANTITY
 export const updateCartItem = asyncHandler(async (req, res) => {
   const { cartItemId, quantity } = req.body;
+  console.log("Update Cart Item", { cartItemId, quantity });
 
   if (quantity < 1) throw new ApiError(400, "Quantity must be at least 1");
 

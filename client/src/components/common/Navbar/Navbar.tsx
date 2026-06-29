@@ -43,7 +43,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const { user, isLoggedIn, logoutUser } = useAuth();
-  const cartCount = useAppSelector((state) => state.cart.totalItems);
+  const cartCount = useAppSelector((state) => state.cart.items.length);
   const unreadCount = useAppSelector((state) => state.notification.unreadCount);
 
   return (

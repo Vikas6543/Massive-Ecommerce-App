@@ -30,8 +30,16 @@ export default function ProductCard({ product }: ProductCardProps) {
     toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
   };
 
+  const checkItemInCart = () => {
+    return cartItems.some((item) => item.productId === product._id);
+  };
+
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
+    if (checkItemInCart()) {
+      toast.error("Product already in cart");
+      return;
+    }
     await addToCart({
       productId: product._id,
       quantity: 1,
@@ -101,7 +109,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               ) : (
                 <div>
                   <ShoppingCart size={16} className="text-white" />
-                  {cartItems.some((item) => item.productId === product._id) && (
+                  {checkItemInCart() && (
                     <Check
                       size={16}
                       className="text-white absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5"

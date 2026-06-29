@@ -24,6 +24,18 @@ interface CartState {
   totalPrice: number;
 }
 
+// HELPER — recalculate totals
+const calculateTotals = (items: CartItem[]) => {
+  return items.reduce(
+    (acc, item) => {
+      acc.totalItems += item.quantity;
+      acc.totalPrice += item.price * item.quantity;
+      return acc;
+    },
+    { totalItems: 0, totalPrice: 0 },
+  );
+};
+
 // INITIAL STATE
 const initialState: CartState = {
   items: [],
@@ -38,12 +50,16 @@ const cartSlice = createSlice({
   reducers: {
     setCart: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload;
+      const { totalItems, totalPrice } = calculateTotals(action.payload);
+      state.totalItems = totalItems;
+      state.totalPrice = totalPrice;
     },
 
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const existing = state.items.find(
         (item) => item.productId === action.payload.productId,
       );
+      console.log("existing", existing);
       if (existing) {
         existing.quantity += action.payload.quantity;
       } else {
@@ -55,6 +71,9 @@ const cartSlice = createSlice({
       state.items = state.items.filter(
         (item) => item.productId !== action.payload,
       );
+      const { totalItems, totalPrice } = calculateTotals(state.items);
+      state.totalItems = totalItems;
+      state.totalPrice = totalPrice;
     },
 
     updateQuantity: (
@@ -67,6 +86,9 @@ const cartSlice = createSlice({
       if (item) {
         item.quantity = action.payload.quantity;
       }
+      const { totalItems, totalPrice } = calculateTotals(state.items);
+      state.totalItems = totalItems;
+      state.totalPrice = totalPrice;
     },
 
     clearCart: (state) => {

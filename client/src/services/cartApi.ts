@@ -22,14 +22,14 @@ export const cartApi = api.injectEndpoints({
             const cartItems = data.data.items.map((item: any) => ({
               productId: item.product._id,
               name: item.product.name,
-              price: item.price,
+              price: item.product.price,
               quantity: item.quantity,
               image: item.product.images[0],
               stock: item.product.stock,
               variant: item.variant,
               slug: item.product.slug,
               cartId: item._id,
-              discountPrice: item.discountPrice,
+              discountPrice: item.product.discountPrice,
             }));
             dispatch(setCart(cartItems));
           }
@@ -50,9 +50,9 @@ export const cartApi = api.injectEndpoints({
     // UPDATE QUANTITY
     updateCartItem: builder.mutation<CartResponse, UpdateCartRequest>({
       query: ({ productId, quantity }) => ({
-        url: `/cart/${productId}`,
+        url: `/cart/update`,
         method: "PUT",
-        body: { quantity },
+        body: { cartItemId: productId, quantity },
       }),
       invalidatesTags: ["Cart"],
     }),
