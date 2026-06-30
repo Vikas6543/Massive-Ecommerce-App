@@ -269,6 +269,103 @@ export const login = asyncHandler(async (req, res) => {
   );
 });
 
+// ✅ GET USER PROFILE
+export const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await UserModel.findById(req.user._id).select("-password");
+
+  if (!user) throw new ApiError(404, "User not found");
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          avatar: user.avatar,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
+          isActive: user.isActive,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      },
+      "Profile fetched successfully",
+    ),
+  );
+});
+
+// ✅ UPDATE USER PROFILE
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { name, phone, avatar } = req.body;
+  const user = await UserModel.findById(req.user._id);
+
+  if (!user) throw new ApiError(404, "User not found");
+
+  if (name !== undefined) {
+    user.name = name.trim();
+  }
+
+  if (phone !== undefined) {
+    user.phone = phone.trim();
+  }
+
+  if (avatar !== undefined) {
+    if (avatar === null) {
+      user.avatar = { url: "", public_id: "" };
+    } else if (typeof avatar === "string") {
+      user.avatar = { url: avatar, public_id: "" };
+    } else if (typeof avatar === "object") {
+      user.avatar = {
+        url: avatar.url || "",
+        public_id: avatar.public_id || "",
+      };
+    }
+  }
+
+  await user.save();
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          avatar: user.avatar,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
+        },
+      },
+      "Profile updated successfully",
+    ),
+  );
+});
+
+// ✅ CHANGE PASSWORD
+export const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = await UserModel.findById(req.user._id).select("+password");
+
+  if (!user) throw new ApiError(404, "User not found");
+
+  const isPasswordValid = await user.comparePassword(currentPassword);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Current password is incorrect");
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Password changed successfully"));
+});
+
 // ✅ REFRESH TOKEN (with rotation)
 export const refreshToken = asyncHandler(async (req, res) => {
   const token =

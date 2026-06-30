@@ -7,6 +7,9 @@ import {
   RegisterRequest,
   ResetPasswordRequest,
   ForgotPasswordRequest,
+  ChangePasswordRequest,
+  UpdateProfileRequest,
+  ProfileResponse,
 } from "@/types/auth.types";
 
 export const authApi = api.injectEndpoints({
@@ -96,6 +99,31 @@ export const authApi = api.injectEndpoints({
     //     body: data,
     //   }),
     // }),
+
+    // GET PROFILE
+    getProfile: builder.query<ProfileResponse, void>({
+      query: () => "/auth/profile",
+      providesTags: ["Auth"],
+    }),
+
+    // UPDATE PROFILE
+    updateProfile: builder.mutation<ProfileResponse, UpdateProfileRequest>({
+      query: (data) => ({
+        url: "/auth/profile",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
+    // CHANGE PASSWORD
+    changePassword: builder.mutation<MessageResponse, ChangePasswordRequest>({
+      query: (data) => ({
+        url: "/auth/change-password",
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -108,4 +136,7 @@ export const {
   useResetPasswordMutation,
   // useResendOtpMutation,
   useVerifyEmailTokenMutation,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
 } = authApi;

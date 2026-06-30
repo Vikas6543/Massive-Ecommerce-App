@@ -63,3 +63,39 @@ export const resetPasswordSchema = Joi.object({
     "string.min": "Password must be at least 6 characters",
   }),
 });
+
+export const updateProfileSchema = Joi.object({
+  name: Joi.string().min(3).max(50).optional().messages({
+    "string.min": "Name must be at least 3 characters",
+    "string.max": "Name cannot exceed 50 characters",
+  }),
+  phone: Joi.string()
+    .pattern(/^[6-9]\d{9}$/)
+    .optional()
+    .messages({
+      "string.pattern.base": "Please enter a valid Indian phone number",
+    }),
+  avatar: Joi.alternatives()
+    .try(
+      Joi.string(),
+      Joi.object({
+        url: Joi.string().allow(""),
+        public_id: Joi.string().allow(""),
+      }).unknown(true),
+    )
+    .optional(),
+})
+  .or("name", "phone", "avatar")
+  .messages({
+    "object.missing": "Provide at least one field to update",
+  });
+
+export const changePasswordSchema = Joi.object({
+  currentPassword: Joi.string().required().messages({
+    "any.required": "Current password is required",
+  }),
+  newPassword: Joi.string().min(6).required().messages({
+    "string.min": "New password must be at least 6 characters",
+    "any.required": "New password is required",
+  }),
+});
