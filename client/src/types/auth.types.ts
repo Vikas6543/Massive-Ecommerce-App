@@ -54,3 +54,33 @@ export interface MessageResponse {
   success: boolean;
   message: string;
 }
+
+export interface UpdateProfileRequest {
+  name?: string;
+  phone?: string;
+  avatar?: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      phone?: string;
+      avatar?: string;
+      role: string;
+      isEmailVerified: boolean;
+      isActive?: boolean;
+      createdAt?: string;
+      updatedAt?: string;
+    };
+  };
+}

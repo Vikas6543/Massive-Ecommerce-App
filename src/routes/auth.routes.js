@@ -5,6 +5,9 @@ import {
   sendOTP,
   verifyOTP,
   login,
+  getUserProfile,
+  updateProfile,
+  changePassword,
   refreshToken,
   forgotPassword,
   resetPassword,
@@ -22,6 +25,8 @@ import {
   verifyOTPSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  updateProfileSchema,
+  changePasswordSchema,
 } from "../validations/auth.validation.js";
 
 const router = express.Router();
@@ -31,6 +36,9 @@ router.get("/verify-email", verifyEmail);
 router.post("/send-otp", validate(sendOTPSchema), sendOTP);
 router.post("/verify-otp", validate(verifyOTPSchema), verifyOTP);
 router.post("/login", validate(loginSchema), login);
+router.get("/profile", protect, getUserProfile);
+router.put("/profile", protect, validate(updateProfileSchema), updateProfile);
+router.put("/change-password", protect, validate(changePasswordSchema), changePassword);
 router.post("/refresh-token", refreshToken);
 router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
