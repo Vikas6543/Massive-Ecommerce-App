@@ -160,10 +160,10 @@ export default function ProfilePage() {
           </div>
 
           {/* INFO */}
-          <div className="space-y-1">
+          <div className="relative">
             <h2 className="text-xl font-bold text-zinc-900">{profile?.name}</h2>
             <p className="text-sm text-zinc-500">{profile?.email}</p>
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center py-2">
               {profile?.isEmailVerified ? (
                 <span className="flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-lg">
                   <CheckCircle size={11} />
@@ -174,12 +174,9 @@ export default function ProfilePage() {
                   Email not verified
                 </span>
               )}
-              <span className="text-xs text-zinc-400 capitalize">
-                {profile?.role}
-              </span>
-            </div>
+            </div> */}
             {profile?.createdAt && (
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-zinc-400 py-[7px]">
                 Member since {formatDate(profile.createdAt)}
               </p>
             )}

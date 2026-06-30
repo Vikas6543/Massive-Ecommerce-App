@@ -5,14 +5,14 @@ import { config } from "../config/env.js";
 // ✅ Generate Access Token (short lived)
 export const generateAccessToken = (userId, role) => {
   return jwt.sign({ id: userId, role }, config.ACCESS_TOKEN_SECRET, {
-    expiresIn: config.ACCESS_TOKEN_EXPIRY || "12h",
+    expiresIn: config.ACCESS_TOKEN_EXPIRY,
   });
 };
 
 // ✅ Generate Refresh Token (long lived)
 export const generateRefreshToken = (userId) => {
   return jwt.sign({ id: userId }, config.REFRESH_TOKEN_SECRET, {
-    expiresIn: config.REFRESH_TOKEN_EXPIRY || "7d",
+    expiresIn: config.REFRESH_TOKEN_EXPIRY,
   });
 };
 

@@ -73,7 +73,7 @@ export default function UserLayout({
                 </p>
                 <div className="flex items-center gap-1.5 border border-zinc-400 rounded-full px-2 py-1 w-fit">
                   <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <span className="text-xs text-zinc-500 capitalize">
+                  <span className="text-[11px] text-zinc-500 capitalize">
                     {user.role} account
                   </span>
                 </div>
